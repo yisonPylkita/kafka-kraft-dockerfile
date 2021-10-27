@@ -7,6 +7,8 @@ RUN wget https://dlcdn.apache.org/kafka/3.0.0/kafka_2.12-3.0.0.tgz && \
     tar xvf kafka_2.12-3.0.0.tgz
 
 WORKDIR kafka_2.12-3.0.0
-# TODO: ID is static. Change it to one generated at startup
-RUN ./bin/kafka-storage.sh format -t DLwcm1QBR76k2ONUa4VwYw -c ./config/kraft/server.properties
-CMD ./bin/kafka-server-start.sh ./config/kraft/server.properties
+RUN CLUSTER_ID=$(./bin/kafka-storage.sh random-uuid) && ./bin/kafka-storage.sh format -t $CLUSTER_ID -c ./config/kraft/server.properties
+CMD ./bin/kafka-server-start.sh -daemon ./config/kraft/server.properties && \
+    ./bin/kafka-topics.sh --create --topic $KAFKA_CREATE_TOPIC --partitions 1 --replication-factor 1 --bootstrap-server localhost:9092 && \
+    sleep 999999999999
+
