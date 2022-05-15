@@ -13,7 +13,7 @@ echo "Starting Kafka"
 
 # Second one will create topics and close. Then return first one to foreground for SIGINT|SIGTERM
 export IFS=","
-for TOPIC in $KAFKA_CREATE_TOPIC; do
+for TOPIC in $KAFKA_CREATE_TOPICS; do
     until echo "Trying to create topic $TOPIC" && /opt/kafka/bin/kafka-topics.sh --create --topic $TOPIC --partitions 1 --replication-factor 1 --bootstrap-server localhost:9092; do
         echo "Failed to create topic $TOPIC. Retry"
     done
